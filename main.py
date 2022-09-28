@@ -52,7 +52,6 @@ movies=movies.merge(credits,on='title')
 
 # making the dataset to keep our decided columns
 movies=movies[['movie_id','title','overview','genres','keywords','cast','crew']]
-# print(movies)
 
 # data preprocessing
 # print(movies.isnull().sum()) # to check for empty columns
@@ -62,18 +61,13 @@ movies.dropna(inplace=True) # ignoring the 3 empty columns beacuse 3 is very sma
 # making a new column 'tag' with the help of 'overview', 'keywords', 'genres', 'cast', 'crew'
 # making the data in simple format to make the 'tag'
 movies['genres']=movies['genres'].apply(convert)
-# print(movies['genres'])
 movies['keywords']=movies['keywords'].apply(convert)
-# print(movies['keywords'])
 # for the cast, we will take the first three main cast, rest we'll ignore
 movies['cast']=movies['cast'].apply(convertCast)
-# print(movies['cast'])
 # we'll take only director from the crew
 movies['crew']=movies['crew'].apply(convertCrew)
-# print(movies['crew'])
 # making the string in overview to a list so that every word is different in the list
 movies['overview']=movies['overview'].apply(lambda x:x.split())
-# print(movies['overview'])
 # now we've to replace spaces between words to make the model work better
 movies['genres']=movies['genres'].apply(lambda x:[i.replace(" ","")for i in x])
 movies['keywords']=movies['keywords'].apply(lambda x:[i.replace(" ","")for i in x])
@@ -81,14 +75,12 @@ movies['cast']=movies['cast'].apply(lambda x:[i.replace(" ","")for i in x])
 movies['crew']=movies['crew'].apply(lambda x:[i.replace(" ","")for i in x])
 # making the 'tags' column by adding 'overview', 'keywords', 'genres', 'cast', 'crew'
 movies['tags']=movies['overview']+movies['genres']+movies['keywords']+movies['cast']+movies['crew']
-# print(movies.head())
 # now we don't need the extra column, so we'll make a new datframe with 'movie_id', 'title', 'tags'
 new_df=movies[['movie_id','title','tags']]
 # now we've to convert the list of words in 'tags' back into string
 new_df['tags']=new_df['tags'].apply(lambda x:" ".join(x))
 # now we'll convert the 'tags' string to lowercase
 new_df['tags']=new_df['tags'].apply(lambda x:x.lower())
-# print(new_df.head())
 
 # text vectorization: we'll make every string a vector and recommend movies which are closest to that vector
 # we'll use 'bag of words' for text vectorization
